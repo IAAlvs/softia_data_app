@@ -5,7 +5,7 @@ export const FilesContext = React.createContext<FilesContextData | null>(null);
 const FilesContextProvider = ({ children }: { children: React.ReactNode }) => {
     //Could be pictures, files, videos formates as FilesDto
     const [filesByUser, setFilesByUser] = useState<Array<FilesDto>>([]);
-    const [reloadFiles, setReloadFiles] = useState("value");
+    const [reloadFiles, setReloadFiles] = useState("value"  );
     const [filesFiltered, setFilesFiltered] = useState<Array<FilesDto>>([]);
     const reloadFilesForUser = ():void => setReloadFiles("value");
     const filterFiles = (category : string, fileName:string) :void =>{
@@ -20,12 +20,8 @@ const FilesContextProvider = ({ children }: { children: React.ReactNode }) => {
         }
     }
     useEffect(() => {
-      // Llamada a la API para obtener los datos
-  /*     fetch('https://api.example.com/data')
-        .then(response => response.json())
-        .then(data => setMiValor(data))
-        .catch(error => console.error(error)); */
-        setFilesByUser
+        //Get data based on UserAuth0
+        //if()
     }, [reloadFiles]);
 
   const filesContextData:FilesContextData = {
