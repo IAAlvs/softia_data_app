@@ -1,0 +1,18 @@
+/* Estilo para un correo válido */
+/* .email-form-cloud:focus{
+  border-color: transparent;
+
+}
+.email-form-cloud:active{
+  border-color: transparent;
+
+} */
+.valid-email {
+    border: 2px solid #34D399 !important; /* Borde verde */
+  }
+  
+  /* Estilo para un correo no válido */
+  .invalid-email {
+    border: 2px solid #F87171 !important; /* Borde rojo */
+  }
+  

@@ -1,0 +1,21 @@
+/* CSS classes for the Login button */
+.login-button {
+    background-color: #19212d;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 4px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+  }
+  
+  .login-button:hover {
+    background-color: #0a1434;
+  }
+  
+  .login-button:focus {
+    outline: none;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+  }
+  
