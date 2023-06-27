@@ -6,9 +6,9 @@ import { useRouter } from 'next/router';
 
 function Home() {
   const { user, error, isLoading } = useUser();
+  const router = useRouter();
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>{error.message}</div>;
-  const router = useRouter();
   if(user){
     router.push('/dashboard');
   }

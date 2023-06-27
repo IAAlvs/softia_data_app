@@ -2,17 +2,9 @@ import { useState, useEffect } from 'react';
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { Dialog, Transition } from '@headlessui/react';
 
-const filesData = [
-  {
-    id: 1,
-    fileName: 'documento.pdf',
-    size: '1.5 MB',
-    extension: 'pdf',
-  },
-];
 
-function FileViewer() {
-  const [files, setFiles] = useState(filesData);
+function FileViewer({userFiles}) {
+  //const [files, setFiles] = useState(userFiles);
   const [selectedFile, setSelectedFile] = useState(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
@@ -31,42 +23,44 @@ function FileViewer() {
 
   return (
     <div>
-      {files.map((file) => (
-        <div key={file.id} className="flex bg-bermuda items-center py-2">
-          {/* Icono según la extensión del archivo */}
-          {file.extension === 'pdf' && (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6 mr-2 text-red-500"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
+      {
+      (!userFiles || userFiles == [])? null:
+        userFiles.map((file) => (
+          <div key={file.id} className="flex bg-bermuda items-center py-2">
+            {/* Icono según la extensión del archivo */}
+            {file.extension === 'pdf' && (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6 mr-2 text-red-500"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16m-7 6h7"
+                />
+              </svg>
+            )}
+
+            {/* Nombre del archivo */}
+            <span className="mr-2 ">{file.fileName}</span>
+
+            {/* Tamaño del archivo */}
+            <span className=" text-sm">{(file.fileSize/1000).toString() + " mb"}</span>
+
+            {/* Botón de eliminar archivo */}
+            <button
+              className="ml-auto"
+              onClick={() => handleDeleteFile(file)}
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 6h16M4 12h16m-7 6h7"
-              />
-            </svg>
-          )}
-
-          {/* Nombre del archivo */}
-          <span className="mr-2 ">{file.fileName}</span>
-
-          {/* Tamaño del archivo */}
-          <span className=" text-sm">{file.size}</span>
-
-          {/* Botón de eliminar archivo */}
-          <button
-            className="ml-auto"
-            onClick={() => handleDeleteFile(file)}
-          >
-            <XMarkIcon className="h-5 w-5 text-red-500" />
-          </button>
-        </div>
-      ))}
-
+              <XMarkIcon className="h-5 w-5 text-red-500" />
+            </button>
+          </div>
+        ))
+      }
       {/* Diálogo de confirmación para eliminar archivo */}
       <Transition show={isDeleteDialogOpen}>
         <Dialog
