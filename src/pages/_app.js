@@ -1,12 +1,13 @@
 import "../styles/globals.css";
-import { UserProvider } from '@auth0/nextjs-auth0/client';
+import {AppContextProvider} from "../context/AppContext/AppContextProvider"
 
 
-function MyApp({ Component, pageProps }) {
+function App({ Component, pageProps }) {
+  //const contexts = pageProps.context || [];
   return(
-  <UserProvider>
-    <Component {...pageProps} />;
-  </UserProvider>);
+    <AppContextProvider>
+      <Component {...pageProps} />
+    </AppContextProvider>);
 }
 
-export default MyApp;
+export default App;
