@@ -39,3 +39,7 @@ jspm_packages
 #Environment
 .env
 *.env
+#visual studio
+.vscode
+*.vscode
+
