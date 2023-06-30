@@ -5,7 +5,8 @@ This documentation provides an overview of how to use and work with the Softiada
 ## Table of Contents
 - [Installation](#installation)
 - [Running the API](#running-the-api)
-- [Swagger-Autogen](#swagger-autogen)
+- [Api Routes](#api-routes)
+- [Swagger](#swagger-autogen)
 - [Sequelize](#sequelize)
 - [.sequelizerc File](#sequelizerc-file)
 - [Scripts](#scripts)
@@ -29,16 +30,16 @@ To start the API in development mode, use the following command:
 
 This command will concurrently run the Next.js development server and the Express.js server for the API.
 
-## Swagger-Autogen
+## Api Routes
+Api routes are automatically generated when you add a controller
+Tsoa automatically generated **routes.ts** file that contains all the 
+functionallity for our api and swagger.
+Actually you can generate running : **yarn run tsoa routes**
 
-The Swagger-Autogen tool is used to automatically generate the Swagger documentation for the API based on your route handlers and JSDoc comments.
+## Swagger
+Swagger files is automatically generated for **Tsoa** and you dont need
+to care about its generation its automatically generated when builds aplication.
 
-To generate the Swagger documentation, run the following command:
-
-**npm run swagger-autogen**
-
-
-This command will execute the `swagger.js` file which configures and generates the Swagger documentation.
 
 ## Sequelize
 
@@ -49,8 +50,10 @@ Sequelize is an ORM (Object-Relational Mapping) library for Node.js, which provi
 The `.sequelizerc` file is a configuration file for Sequelize CLI (Command-Line Interface). It allows you to customize the paths and settings for your Sequelize project.
 
 ## Scripts
-
+- `npm run predev`: Generates swagger file that works for documentation.
 - `npm run dev`: Starts the API in development mode using Next.js and Express.js.
+- `npm run prebuild`: Generates swagger file that works for documentation and also 
+    modifies routes that are automatically generated.
 - `npm run build`: Builds the Next.js application for production.
 - `npm run prestart`: Executes the build script before starting the API.
 - `npm start`: Starts the API in production mode.
