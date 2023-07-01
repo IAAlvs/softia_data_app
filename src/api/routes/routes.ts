@@ -3,7 +3,9 @@
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { Controller, ValidationService, FieldErrors, ValidateError, TsoaRoute, HttpStatusCodeLiteral, TsoaResponse, fetchMiddlewares } from '@tsoa/runtime';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { userController } from './../controllers/userController';
+import { UsersController } from './../controllers/userController';
+import { iocContainer } from './../inversify/inversify.config';
+import type { IocContainer, IocContainerFactory } from '@tsoa/runtime';
 import type { RequestHandler, Router } from 'express';
 
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -11,7 +13,7 @@ import type { RequestHandler, Router } from 'express';
 const models: TsoaRoute.Models = {
     "UUID": {
         "dataType": "refAlias",
-        "type": {"dataType":"string","validators":{}},
+        "type": {"dataType":"string","validators":{"pattern":{"value":"[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-4[0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}"}}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "GetUserResponseDto": {
@@ -49,12 +51,12 @@ export function RegisterRoutes(app: Router) {
     //      Please look into the "controllerPathGlobs" config option described in the readme: https://github.com/lukeautry/tsoa
     // ###########################################################################################################
         app.get('/api/v1/users/:userId',
-            ...(fetchMiddlewares<RequestHandler>(userController)),
-            ...(fetchMiddlewares<RequestHandler>(userController.prototype.getUser)),
+            ...(fetchMiddlewares<RequestHandler>(UsersController)),
+            ...(fetchMiddlewares<RequestHandler>(UsersController.prototype.getUser)),
 
-            function userController_getUser(request: any, response: any, next: any) {
+            async function UsersController_getUser(request: any, response: any, next: any) {
             const args = {
-                    userId: {"in":"path","name":"userId","required":true,"dataType":"string"},
+                    userId: {"in":"path","name":"userId","required":true,"ref":"UUID"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -63,21 +65,26 @@ export function RegisterRoutes(app: Router) {
             try {
                 validatedArgs = getValidatedArgs(args, request, response);
 
-                const controller = new userController();
+                const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
+
+                const controller: any = await container.get<UsersController>(UsersController);
+                if (typeof controller['setStatus'] === 'function') {
+                controller.setStatus(undefined);
+                }
 
 
               const promise = controller.getUser.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, 200, next);
+              promiseHandler(controller, promise, response, undefined, next);
             } catch (err) {
                 return next(err);
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/api/v1/users',
-            ...(fetchMiddlewares<RequestHandler>(userController)),
-            ...(fetchMiddlewares<RequestHandler>(userController.prototype.getUsers)),
+            ...(fetchMiddlewares<RequestHandler>(UsersController)),
+            ...(fetchMiddlewares<RequestHandler>(UsersController.prototype.getUsers)),
 
-            function userController_getUsers(request: any, response: any, next: any) {
+            async function UsersController_getUsers(request: any, response: any, next: any) {
             const args = {
             };
 
@@ -87,7 +94,12 @@ export function RegisterRoutes(app: Router) {
             try {
                 validatedArgs = getValidatedArgs(args, request, response);
 
-                const controller = new userController();
+                const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
+
+                const controller: any = await container.get<UsersController>(UsersController);
+                if (typeof controller['setStatus'] === 'function') {
+                controller.setStatus(undefined);
+                }
 
 
               const promise = controller.getUsers.apply(controller, validatedArgs as any);

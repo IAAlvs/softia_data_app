@@ -31,11 +31,11 @@ export default function AddMiddlewares(app : express.Application){
         );
     }
     app.use(errorHandler);
-    app.use(function notFoundHandler(req : Request, res: Response) {
+/*     app.use(function notFoundHandler(_req,   res: Response) {
       res.status(404).send({
         message: "Not Found",
       });
-    });
+    }); */
 
 
 
