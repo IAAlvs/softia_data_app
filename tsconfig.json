@@ -4,6 +4,8 @@
     "outDir": "dist",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
+    "types": ["reflect-metadata"],
+    "lib": ["es6", "dom"],
     "skipLibCheck": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,

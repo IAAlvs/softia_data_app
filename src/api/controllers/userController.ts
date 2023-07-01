@@ -1,15 +1,20 @@
+// src/users/usersController.ts
+import { provideSingleton } from '../inversify/provideSingleton';
+import {inject, injectable } from "inversify";
+import { UserServiceInterface } from '../interfaces/UserServiceInterface';
+import TYPES from '../interfaces/ServiceTypes';
 import {
-  Body,
   Controller,
   Get,
   Path,
-  Post,
-  Query,
   Route,
   SuccessResponse,
-  Response as TsoaResponse
+  Response
 } from "tsoa";
-import { User } from '../models/user';
+export interface UserControllerInterface{
+    getUser(userId: UUID): Promise<GetUserResponseDto | ErrorResponse>,
+    getUsers(): Promise<GetUserResponseDto[] | ErrorResponse>
+}
 /**
  * Stringified UUIDv4.
  * See [RFC 4112](https://tools.ietf.org/html/rfc4122)
@@ -17,7 +22,7 @@ import { User } from '../models/user';
  * @format uuid
  */
 export type UUID = string;
-interface GetUserResponseDto{
+export interface GetUserResponseDto{
     id: UUID,
     authId : string,
     email : string,
@@ -28,35 +33,31 @@ interface GetUserResponseDto{
     address? : string
 }
   
-interface ErrorResponse {
+export interface ErrorResponse {
 message: string;
 statusCode: number;
 }
 
 @Route("api/v1/users")
-export class userController extends Controller{
-  @SuccessResponse("200", "Ok") 
-  @TsoaResponse(404)
-  @TsoaResponse(500)
-  /**
-   * @example userId "52907745-7672-470e-a803-a2f8feb52944"
-   * @example userId "e77ef155-bd12-46f0-8559-bf55f6dd4c63"
-   */
+//@provideSingleton<UserServiceInterface>(TYPES.UserServiceInterface)
+@provideSingleton(UsersController)
+//@provideSingleton(FooController)
+@injectable()
+export class UsersController extends Controller implements UserControllerInterface {
+  //private readonly UserServiceInterface _user
+  constructor(
+    @inject(TYPES.UserServiceInterface) private _userService: UserServiceInterface) {
+    super();
+  }
   @Get("{userId}")
-  public async getUser(@Path() userId: string): Promise<GetUserResponseDto | ErrorResponse>{
+  @Response<ErrorResponse>(404, "not found")
+  @Response(500, "Server Error")
+  public async getUser(@Path() userId: UUID): Promise<GetUserResponseDto | ErrorResponse>{
     try {
-      const user: User | null = await User.findByPk(userId)
-      if (user) {
-        const response: GetUserResponseDto = {
-          id : user.id, authId : user.authId, email : user.email, 
-          name : user.name, lastName : user.lastName, 
-          secondLastName : user.secondLastName, age : user.age, 
-          address : user.address
-        };
-        //res.json(response);
-        this.setStatus(200);
-        return response;
-      } else {
+      const user = await this._userService.getUser(userId);
+      if (user) 
+        return user;
+      else{
         const errorResponse: ErrorResponse = {
           message: 'User not found',
           statusCode: 404
@@ -77,28 +78,12 @@ export class userController extends Controller{
   }
   @Get()
   @SuccessResponse("200", "Ok")
-  @TsoaResponse(500)
+  @Response(500, "Server Error")
   public async getUsers(): Promise<GetUserResponseDto[] | ErrorResponse> {
     try {
-      const users: User[] | null = await User.findAll();
-      if(users == null){
-        //res.json([]);
-        this.setStatus(200);
-        return[];
-      }
-      const response: GetUserResponseDto[] = users.map(function(user:User):GetUserResponseDto{
-          return {
-            id : user.id, authId : user.authId, email : user.email, 
-          name : user.name, lastName : user.lastName, 
-          secondLastName : user.secondLastName, age : user.age, 
-          address : user.address
-  
-          }
-        }
-      ); 
-      //res.json(response);
+      const users = await this._userService.getUsers();
       this.setStatus(200);
-      return response;
+      return users;
     } catch (error) {
       const errorResponse: ErrorResponse = {
         message: 'Internal server error',
@@ -109,19 +94,5 @@ export class userController extends Controller{
       return errorResponse;
     }
   }
-
+  
 }
-/* 
-  public async getUserFiles(req: Request, res: Response): Promise<void>  {
-    // Lógica para obtener los usuarios de la base de datos
-    // y enviar la respuesta al cliente
-    const users: User[] = [];
-    res.json(users);
-  }
-*/
-
-
-
-
-
-
