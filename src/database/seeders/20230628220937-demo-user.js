@@ -5,7 +5,7 @@ const crypto = require("crypto")
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.bulkInsert('Users', [{
-      Id : crypto.randomUUID(),
+      Id : '61ad624c-7233-4839-8ece-49fe0e3041ce',
       AuthId : crypto.randomUUID(),
       Email : "emailtests@gmail.com",
       Name: 'John',

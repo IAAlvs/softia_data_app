@@ -1,5 +1,5 @@
-const {Model, DataTypes } = require("sequelize");
-const {sequelize} = require("../../database/database.config")
+import { Model, DataTypes } from "sequelize";
+import { sequelize } from "../../database/database.config";
 
 export class User extends Model {}
 User.init(
