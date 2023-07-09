@@ -1,14 +1,42 @@
 {
     "entryFile": "src/api/",
-    "noImplicitAdditionalProperties": "throw-on-extras",
+    "noImplicitAdditionalProperties": "silently-remove-extras",
     "spec": {
-        "outputDirectory": "src/api/swagger",
-        "specVersion": 3
+      "outputDirectory": "public",
+      "specVersion": 3,
+      "securityDefinitions": {
+          "auth0": {
+              "type": "apiKey",
+              "name": "Authorization",
+              "in": "header",
+              "scopes": {
+                "read:users": "read user from app",
+                "read:user-files": "retrieve user files"
+            }
+          }
+      },
+      "spec": {
+        "info": {
+          "title": "Users Api",
+          "description": "Api to Upload and Get Users info an their docs",
+          "version": "1.0.0",
+          "contact": {
+            "name": "Softiadata TechTeam",
+            "email": "tech.team@softiadata.com",
+            "url": "https://www.softiadata.com/contact"
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:4000"
+          }
+        ]
+      } 
     },
     "controllerPathGlobs": ["./src/api/controllers/*Controller.ts"],
     "routes": {
       "routesDir": "src/api/routes",
-      "iocModule": "src/api/inversify/inversify.config"
-
+      "iocModule": "src/api/aspects/inversify.config",
+      "authenticationModule": "src/api/middlewares/Authorization/AuthorizationMiddleware.ts"
     }
 }
