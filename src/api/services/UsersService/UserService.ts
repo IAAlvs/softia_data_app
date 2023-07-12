@@ -11,10 +11,6 @@ export class UserService implements UserServiceInterface {
       if (!user) {
         return null;
     }
-/*     id : user.id, authId : user.authId, email : user.data, 
-    name : user.name, lastName : user.lastName, 
-    secondLastName : user.secondLastName, age : user.age, 
-    address : user.address */
     const response: GetUserResponseDto = {...user.dataValues};
     return response;
   }
@@ -23,10 +19,6 @@ export class UserService implements UserServiceInterface {
       if(users == null){
         return[];
       }
-      /* id: user.id, authId: user.authId, email: user.email,
-          name: user.name, lastName: user.lastName,
-          secondLastName: user.secondLastName, age: user.age,
-          address: user.address */
       const response: GetUserResponseDto[] = users.map((user: User): GetUserResponseDto => ({
       ...user.dataValues    
       })
@@ -40,7 +32,6 @@ export class UserService implements UserServiceInterface {
     }
     //Only retrieves fileIds
     const userFiles : UserFiles[] | undefined = await UserFiles.findAll({ 
-      attributes : ["fileId"],
       where : {
       userId : user.dataValues.id,
       visible : true
@@ -50,17 +41,24 @@ export class UserService implements UserServiceInterface {
         userId: user.dataValues.id,
         files : []
       });}
-    const files = userFiles.map(e => e.dataValues.fileId)
+
+    const files = userFiles.map( ({dataValues})=> {
+      return{
+        id : dataValues.fileId,
+        fileSize : dataValues.fileSize,
+        fileType : dataValues.fileType,
+        dropDate : dataValues.dropDate,
+        visible : dataValues.visible,
+        createdAt : dataValues.createdAt,
+        updatedAt : dataValues.updatedAt
+      }
+
+    })
     const response: GetUserFilesDtoResponse = {
       userId: user.dataValues.id,
       files : files
     }
     return response;
-
-    //console.log(userFiles.dataValues)
-
-
-
   }
   public async uploadUserFile(postDto : PostUserFileRequestDto): Promise<PostUserFileResponseDto> {
     const user: User | null = await User.findByPk(postDto.userId);

@@ -43,11 +43,25 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "FileDto": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"ref":"UUID","required":true},
+            "fileSize": {"dataType":"double","required":true},
+            "fileType": {"dataType":"string","required":true},
+            "dropDate": {"dataType":"datetime","required":true},
+            "visible": {"dataType":"string","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "updatedAt": {"dataType":"datetime","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "GetUserFilesDtoResponse": {
         "dataType": "refObject",
         "properties": {
             "userId": {"ref":"UUID","required":true},
-            "files": {"dataType":"array","array":{"dataType":"refAlias","ref":"UUID"},"required":true},
+            "files": {"dataType":"array","array":{"dataType":"refObject","ref":"FileDto"},"required":true},
         },
         "additionalProperties": false,
     },
@@ -74,7 +88,7 @@ const models: TsoaRoute.Models = {
             "fileId": {"ref":"UUID","required":true},
             "fileSize": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"parameter fileType is string"},"minimum":{"errorMsg":"fileSize can be less than 1","value":1},"maximum":{"errorMsg":"max value is 9999999999","value":99999999}}},
             "fileType": {"dataType":"string","required":true,"validators":{"isString":{"errorMsg":"parameter fileType is string"},"minLength":{"errorMsg":"Can not be empty","value":1},"maxLength":{"errorMsg":"Max num of characters is 10","value":10}}},
-            "dropDate": {"dataType":"string","required":true,"validators":{"isString":{"errorMsg":"parameter fileType is string"},"minLength":{"errorMsg":"fileType can not be empty","value":3},"maxLength":{"errorMsg":"fileType max character number are 10","value":10},"pattern":{"errorMsg":"Field does not match date YYYY-MM-DD pattern","value":"^\\d{4}-\\d{2}-\\d{2}$"}}},
+            "dropDate": {"dataType":"string","required":true,"validators":{"isString":{"errorMsg":"parameter fileType is string"},"minLength":{"errorMsg":"fileType can not be empty","value":3},"maxLength":{"errorMsg":"fileType max character number are 10","value":10},"pattern":{"errorMsg":"Field does not match date YYYY-MM-DD pattern","value":"^(2[012][0-9][0-9])-(0[1-9]|1[0-2])-([0-2][1-9]|3[0-1])$"}}},
             "visible": {"dataType":"boolean"},
         },
         "additionalProperties": false,
@@ -122,6 +136,7 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/api/v1/users',
+            authenticateMiddleware([{"auth0":["all:users"]}]),
             ...(fetchMiddlewares<RequestHandler>(UsersController)),
             ...(fetchMiddlewares<RequestHandler>(UsersController.prototype.getUsers)),
 

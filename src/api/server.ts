@@ -18,7 +18,6 @@ AddMiddlewares(app);
 RegisterRoutes(app);
 app.use(errorHandler)
 
-
 // Server running
 app.listen(expressPort, () => {
   console.log(`Server starting at : http://localhost:${expressPort}`);
