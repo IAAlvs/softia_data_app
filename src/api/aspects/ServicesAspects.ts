@@ -4,7 +4,6 @@ import { UUID, UserControllerInterface, UsersController, PostUserFileRequestDto 
 import { buildProviderModule } from "inversify-binding-decorators";
 import TYPES from "../interfaces/ServiceTypes";
 import { UserServiceInterface } from "../interfaces/UserServiceInterface";
-import { ValidatorInterface } from "../interfaces/ValidatorInterface";
 import { UserService } from "../services/UsersService/UserService";
 
 export class ServicesAspects{

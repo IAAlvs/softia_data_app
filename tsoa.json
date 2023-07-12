@@ -11,7 +11,9 @@
               "in": "header",
               "scopes": {
                 "read:users": "read user from app",
-                "read:user-files": "retrieve user files"
+                "read:user-files": "retrieve user files",
+                "all:users" : "read all users",
+                "upload:user-files" : "upload user files"
             }
           }
       },

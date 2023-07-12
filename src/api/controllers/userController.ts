@@ -13,8 +13,6 @@ import {
   Security,
   Body,
   Post} from "tsoa";
-import { ValidatorInterface } from '../interfaces/ValidatorInterface';
-import { ValidationError } from '../interfaces/ValidationError';
 export interface UserControllerInterface{
     getUser(userId: UUID, validator?: any): Promise<GetUserResponseDto | ErrorResponse>,
     getUsers(): Promise<GetUserResponseDto[] | ErrorResponse>
@@ -36,9 +34,18 @@ export interface GetUserResponseDto{
     age? : number,
     address? : string
 }
+export interface FileDto{
+  id : UUID,
+  fileSize : number,
+  fileType : string
+  dropDate : Date
+  visible : string 
+  createdAt : Date
+  updatedAt : Date
+}
 export interface GetUserFilesDtoResponse{
   userId : UUID,
-  files : Array<UUID>
+  files : Array<FileDto>
 } 
 export interface ErrorResponse {
 message: string;
@@ -67,7 +74,7 @@ export interface PostUserFileRequestDto{
   *@isString parameter fileType is string
   *@minLength 3 fileType can not be empty
   *@maxLength 10 fileType max character number are 10
-  *@pattern ^\d{4}-\d{2}-\d{2}$ Field does not match date YYYY-MM-DD pattern
+  *@pattern ^(2[012][0-9][0-9])-(0[1-9]|1[0-2])-([0-2][1-9]|3[0-1])$ Field does not match date YYYY-MM-DD pattern
   */
   dropDate : string,
   visible? : boolean
@@ -101,7 +108,6 @@ export class UsersController extends Controller implements UserControllerInterfa
   @Response(500, "Server Error")
   public async getUser(@Path() userId: UUID): Promise<GetUserResponseDto | ErrorResponse>{
     try {
-      //this._validatorUser.validateData(userId);
       const user = await this._userService.getUser(userId);
       if (!user){
         const errorResponse: ErrorResponse = {
@@ -111,21 +117,16 @@ export class UsersController extends Controller implements UserControllerInterfa
         this.setStatus(404);
         return errorResponse;
       }   
+      const {id, authId, email, name, lastName, secondLastName, age, 
+        address} = user;
+
+      const responseDto = {id, authId, email, name, lastName, secondLastName, age, 
+      address};
       this.setStatus(200);
-      return user;
+      return responseDto;
       
     }
     catch (error) {
-      if(error instanceof ValidationError)
-      {
-        const validationErrorResponse: ErrorResponse = {
-          message: error.message || "not matched pattern for id",
-          statusCode: 400
-        };
-        this.setStatus(400);
-        return validationErrorResponse;
-        
-      }
       const errorResponse: ErrorResponse = {
         message: 'Internal server error',
         statusCode: 500
@@ -134,9 +135,10 @@ export class UsersController extends Controller implements UserControllerInterfa
       return errorResponse;
     }
   }
-  //@Security("jwt", ["admin"])
+  @Security("auth0", ["all:users"])
   @Get("users")
   @SuccessResponse("200", "Ok")
+  @Response(401, 'UnAuthorized')
   @Response(500, "Server Error")
   public async getUsers(): Promise<GetUserResponseDto[] | ErrorResponse> {
     try {
@@ -175,18 +177,6 @@ export class UsersController extends Controller implements UserControllerInterfa
       
     }
     catch (error) {
-      console.log({error})
-
-      if(error instanceof ValidationError)
-      {
-        const validationErrorResponse: ErrorResponse = {
-          message: error.message || "not matched pattern for id",
-          statusCode: 400
-        };
-        this.setStatus(400);
-        return validationErrorResponse;
-        
-      }
       const errorResponse: ErrorResponse = {
         message: 'Internal server error',
         statusCode: 500
@@ -198,6 +188,7 @@ export class UsersController extends Controller implements UserControllerInterfa
   @Security("auth0",["upload:user-files"])
   @Post("user-files")
   @Response(401, 'UnAuthorized')
+  @Response(409, 'Conflict')
   @Response<ErrorResponse>(400, "Bad request")
   @Response(500, "Server Error")
   public async uploadUserFile(@Body() request : PostUserFileRequestDto): Promise<PostUserFileResponseDto | ErrorResponse>{    

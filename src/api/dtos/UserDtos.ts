@@ -9,9 +9,18 @@ export interface GetUserResponseDto{
     age? : number,
     address? : string
 }
+export interface FileDto{
+    id : UUID,
+    fileSize : number,
+    fileType : string
+    dropDate : Date
+    visible : string 
+    createdAt : Date
+    updatedAt : Date
+}
 export interface GetUserFilesDtoResponse{
     userId : UUID,
-    files : Array<UUID>
+    files : Array<FileDto>
 }
 export interface PostUserFileRequestDto{
     userId : string, 

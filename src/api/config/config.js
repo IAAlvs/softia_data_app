@@ -1,4 +1,5 @@
-import { config } from 'dotenv';
+//THis cant be change to ESM JS cause sequelize cli is not friendly for this
+const { config } = require('dotenv');
 config()
 const dbConfig = JSON.parse(process.env.DB_CONFIG);
 const environmentsConfig = {
@@ -23,4 +24,4 @@ const environmentsConfig = {
     "port" : dbConfig.port
   }
 }
-export default environmentsConfig;
+module.exports =  environmentsConfig;

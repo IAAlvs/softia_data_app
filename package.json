@@ -10,7 +10,7 @@
     "prestart": "npm run build",
     "start": "node src/api/server.ts",
     "lint": "next lint",
-    "test": "jest --coverage",
+    "test": "jest",
     "swagger": "tsoa spec-and-routes"
   },
   "nodemonConfig": {
@@ -35,7 +35,8 @@
       "<rootDir>/node_modules/"
     ],
     "modulePathIgnorePatterns": [
-      "typings"
+      "typings",
+      "utils"
     ],
     "moduleFileExtensions": [
       "js",
