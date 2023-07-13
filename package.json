@@ -89,6 +89,7 @@
     "react-dropzone": "^14.2.3",
     "reflect-metadata": "^0.1.13",
     "sequelize": "^6.32.1",
+    "sequelize-typescript": "^2.1.5",
     "sinon": "^15.2.0",
     "sqlite3": "^5.1.6",
     "supertest": "^6.3.3",

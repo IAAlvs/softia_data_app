@@ -10,7 +10,8 @@ const environment:string = process.env.NODE_ENV || 'development';
 export default function AddMiddlewares(app : express.Application){
     app.use(urlencoded({extended: true}));
     app.use(json());
-    app.use(morgan("tiny"));
+    if(environment !== "test")
+      app.use(morgan("tiny"));
     app.use(express.static("public"));
     if (environment === 'development') {
         // Swagger only for development

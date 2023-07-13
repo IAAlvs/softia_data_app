@@ -14,7 +14,7 @@ import { JsonWebTokenError } from "jsonwebtoken";
 let token:string; 
 let configureEnv:KeyValuePair<string, object>;
 process.env.TEST_ENV = "test";
-describe('API tests', () => {
+describe('Integration Tests', () => {
   beforeAll(async () =>{
     configureEnvv();
     //token= configureEnv.token as unknown as string;
@@ -87,10 +87,16 @@ describe('API tests', () => {
       address : "Address example"
     };
 
+
     const response = await request(app).get(`/api/v1/users/${userId}`).
     set('Authorization', `Bearer ${token}`);
     const bodyResponse = response["_body"]
 
+    //First check dates that had happend same date no exactly time
+    expect(new Date(bodyResponse.createdAt).toISOString().split("T")[0]).toEqual(new Date().toISOString().split("T")[0]);
+    expect(new Date(bodyResponse.updatedAt).toISOString().split("T")[0]).toEqual(new Date().toISOString().split("T")[0]);
+    delete bodyResponse.createdAt;  // or delete person["age"];
+    delete bodyResponse.updatedAt;
     expect(authDependency.expressAuthentication).toHaveBeenCalledTimes(1);
     expect(response.status).toBe(200);
     expect(bodyResponse).toEqual(expectedUser)
@@ -188,7 +194,7 @@ describe('API tests', () => {
       fileId : '62ad624c-7233-4839-8ece-49fe0e3041ce',
       fileSize : 10101,
       fileType : "pdf",
-      dropDate : "fakedate",
+      dropDate : "2023-07-06",
       visible : true, 
       createdAt : "fakedate",
       updatedAt : "fakedate"
@@ -203,13 +209,13 @@ describe('API tests', () => {
     const fileId = id;
     expect(authDependency.expressAuthentication).toHaveBeenCalledTimes(1);
     expect(response.status).toBe(200);
-    expect(userId).toStrictEqual('61ad624c-7233-4839-8ece-49fe0e3041ce');
-    expect(fileId).toStrictEqual('62ad624c-7233-4839-8ece-49fe0e3041ce')
-    expect(fileSize).toStrictEqual(10101)
-    expect(fileType).toStrictEqual("pdf")
-    expect(visible).toStrictEqual(true)
+    expect(userId).toStrictEqual(expectedUserFile.userId);
+    expect(fileId).toStrictEqual(expectedUserFile.fileId);
+    expect(fileSize).toStrictEqual(expectedUserFile.fileSize);
+    expect(fileType).toStrictEqual(expectedUserFile.fileType);
+    expect(visible).toStrictEqual(expectedUserFile.visible);
+    expect(dropDate).toEqual(expectedUserFile.dropDate);
     //Date of no more thant  5 secods ago
-    expect(dropDate).toEqual("2023-07-06")
     expect(new Date(createdAt).toISOString().split("T")[0]).toEqual(new Date().toISOString().split("T")[0]);
     expect(new Date(updatedAt).toISOString().split("T")[0]).toEqual(new Date().toISOString().split("T")[0]);
   });
