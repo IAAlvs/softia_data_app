@@ -11,7 +11,9 @@ export class UserService implements UserServiceInterface {
       if (!user) {
         return null;
     }
-    const response: GetUserResponseDto = {...user.dataValues};
+    const{id, authId, email, name, lastName, secondLastName, age, address,CreatedAt, UpdatedAt} = user.dataValues;
+    const response: GetUserResponseDto = {id, authId, email, name, lastName, secondLastName, age, address,
+      createdAt: CreatedAt, updatedAt: UpdatedAt};
     return response;
   }
   public async getUsers(): Promise<GetUserResponseDto[]> {
@@ -19,9 +21,14 @@ export class UserService implements UserServiceInterface {
       if(users == null){
         return[];
       }
-      const response: GetUserResponseDto[] = users.map((user: User): GetUserResponseDto => ({
-      ...user.dataValues    
-      })
+      const response: GetUserResponseDto[] = users.map(({id, authId, email, name, lastName,
+         secondLastName, age, address,CreatedAt, UpdatedAt}):
+       GetUserResponseDto => {
+        return {
+          id, authId, email, name, lastName, secondLastName, age, address,
+            createdAt: CreatedAt, updatedAt: UpdatedAt  
+        }
+       }
       ); 
       return response;   
   }

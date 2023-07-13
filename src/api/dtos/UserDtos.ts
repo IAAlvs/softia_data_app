@@ -7,14 +7,16 @@ export interface GetUserResponseDto{
     lastName? : string,
     secondLastName? : string,
     age? : number,
-    address? : string
+    address? : string,
+    createdAt : Date,
+    updatedAt : Date
 }
 export interface FileDto{
     id : UUID,
     fileSize : number,
     fileType : string
-    dropDate : Date
-    visible : string 
+    dropDate : string
+    visible : boolean 
     createdAt : Date
     updatedAt : Date
 }

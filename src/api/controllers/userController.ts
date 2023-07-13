@@ -33,13 +33,15 @@ export interface GetUserResponseDto{
     secondLastName? : string,
     age? : number,
     address? : string
+    createdAt : Date, 
+    updatedAt : Date
 }
 export interface FileDto{
   id : UUID,
   fileSize : number,
   fileType : string
-  dropDate : Date
-  visible : string 
+  dropDate : string
+  visible : boolean
   createdAt : Date
   updatedAt : Date
 }
@@ -117,13 +119,8 @@ export class UsersController extends Controller implements UserControllerInterfa
         this.setStatus(404);
         return errorResponse;
       }   
-      const {id, authId, email, name, lastName, secondLastName, age, 
-        address} = user;
-
-      const responseDto = {id, authId, email, name, lastName, secondLastName, age, 
-      address};
       this.setStatus(200);
-      return responseDto;
+      return user;
       
     }
     catch (error) {
